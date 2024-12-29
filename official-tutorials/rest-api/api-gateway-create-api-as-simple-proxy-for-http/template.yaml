@@ -3,7 +3,7 @@ Description: Creates a simple API Gateway with HTTP proxy integration
 
 Resources:
   ApiGatewayRestApi:
-    Type: AWS::ApiGateway::RestApi
+    Type: AWS::ApiGateway::RestApi # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html
     Properties:
       Name: HTTPProxyAPI
       Description: A simple API with HTTP proxy integration
@@ -12,14 +12,14 @@ Resources:
           - REGIONAL
 
   ApiGatewayResource:
-    Type: AWS::ApiGateway::Resource
+    Type: AWS::ApiGateway::Resource # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-resource.html
     Properties:
       RestApiId: !Ref ApiGatewayRestApi
       ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
       PathPart: '{proxy+}'
 
   ApiGatewayMethod:
-    Type: AWS::ApiGateway::Method
+    Type: AWS::ApiGateway::Method # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html
     Properties:
       HttpMethod: ANY
       ResourceId: !Ref ApiGatewayResource
@@ -36,7 +36,7 @@ Resources:
         method.request.path.proxy: true
         
   ApiGatewayDeployment:
-    Type: AWS::ApiGateway::Deployment
+    Type: AWS::ApiGateway::Deployment # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-deployment.html
     DependsOn: ApiGatewayMethod
     Properties:
       RestApiId: !Ref ApiGatewayRestApi
