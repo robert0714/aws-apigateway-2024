@@ -1,5 +1,7 @@
 # Tutorial: Create a REST API with an HTTP proxy integration
-* reference: https://docs.aws.amazon.com/zh_tw/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-http.html
+* reference:
+  * https://docs.aws.amazon.com/zh_tw/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-http.html
+  * https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-api.html
 
 ## Usage
 ### Deployment
