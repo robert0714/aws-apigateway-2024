@@ -7,7 +7,17 @@
 ### Deployment
 In a shell, navigate to the sample's folder and use the SAM CLI to build a deployable package
 ```bash
-$ sam deploy --s3-bucket $CF_BUCKET --stack-name api-gateway-create-api-as-simple-proxy-for-http --capabilities CAPABILITY_IAM
+## Using aws sam
+
+$ sam deploy --s3-bucket $CF_BUCKET \
+   --stack-name api-gateway-create-api-as-simple-proxy-for-http \
+   --capabilities CAPABILITY_IAM
+
+## Using aws cloudformation
+$ aws cloudformation create-stack \
+    --stack-name api-gateway-create-api-as-simple-proxy-for-http \
+    --template-body file://cf-template.yml \
+    --capabilities CAPABILITY_NAMED_IAM
 ```
 #### Using Terraform
 ```bash

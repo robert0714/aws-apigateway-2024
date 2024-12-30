@@ -1,48 +1,36 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 Description: Creates a simple API Gateway with HTTP proxy integration
 
 Resources:
-  ApiGatewayRestApi:
-    Type: AWS::ApiGateway::RestApi # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html
+  HttpProxyApi:
+    Type: AWS::Serverless::Api # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-api.html
     Properties:
       Name: HTTPProxyAPI
-      Description: A simple API with HTTP proxy integration
-      EndpointConfiguration: # Specify the endpoint type as Regional
-        Types:
-          - REGIONAL
-
-  ApiGatewayResource:
-    Type: AWS::ApiGateway::Resource # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-resource.html
-    Properties:
-      RestApiId: !Ref ApiGatewayRestApi
-      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
-      PathPart: '{proxy+}'
-
-  ApiGatewayMethod:
-    Type: AWS::ApiGateway::Method # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-method.html
-    Properties:
-      HttpMethod: ANY
-      ResourceId: !Ref ApiGatewayResource
-      RestApiId: !Ref ApiGatewayRestApi
-      AuthorizationType: NONE
-      Integration:
-        Type: HTTP_PROXY
-        Uri: http://petstore-demo-endpoint.execute-api.com/{proxy}  # Replace with your backend endpoint
-        IntegrationHttpMethod: ANY
-        PassthroughBehavior: WHEN_NO_MATCH
-        RequestParameters:
-          integration.request.path.proxy: method.request.path.proxy
-      RequestParameters:
-        method.request.path.proxy: true
-        
-  ApiGatewayDeployment:
-    Type: AWS::ApiGateway::Deployment # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-deployment.html
-    DependsOn: ApiGatewayMethod
-    Properties:
-      RestApiId: !Ref ApiGatewayRestApi
       StageName: test
-      
+      EndpointConfiguration: REGIONAL
+      DefinitionBody:
+        swagger: '2.0'
+        info:
+          title: HTTPProxyAPI
+          description: A simple API with HTTP proxy integration
+        paths:
+          /{proxy+}:
+            x-amazon-apigateway-any-method:
+              parameters:
+                - name: proxy
+                  in: path
+                  required: true
+                  type: string
+              x-amazon-apigateway-integration:
+                type: http_proxy
+                uri: http://petstore-demo-endpoint.execute-api.com/{proxy}
+                httpMethod: ANY
+                passthroughBehavior: when_no_match
+                requestParameters:
+                  integration.request.path.proxy: method.request.path.proxy
+                
 Outputs:
   ApiUrl:
     Description: "The URL of the HTTP Proxy API Gateway"
-    Value: !Sub "https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/test/{proxy}"      
+    Value: !Sub "https://${HttpProxyApi}.execute-api.${AWS::Region}.amazonaws.com/test/{proxy}"
