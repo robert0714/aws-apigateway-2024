@@ -6,3 +6,4 @@
 * https://github.com/aws-samples/apigateway-restapi-lambda-authorizer-example
 * https://github.com/aws-samples/api-gateway-auth
 * https://github.com/aws-samples/openbanking-brazilian-auth-samples
+* https://www.youtube.com/watch?v=Q5RwxhCONy8
